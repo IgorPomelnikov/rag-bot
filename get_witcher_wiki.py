@@ -85,7 +85,7 @@ if __name__ == "__main__":
       md_data = parse_to_markdown(character)
       
       # Сохраняем для RAG
-      with open(f"vedmak_characters/{character}1.md", "w", encoding="utf-8") as f:
+      with open(f"knowledge_base/{character}1.md", "w", encoding="utf-8") as f:
          f.write(md_data)
       time.sleep(.1)
       print(f"Готово! Страница '{character}' сохранена в формате Markdown.")
