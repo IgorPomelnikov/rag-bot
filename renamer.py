@@ -1,36 +1,55 @@
 import os
 import re
 
+def remove_lines_with_hash(file):
+   with open(file, 'r', encoding='utf-8') as f_in:
+      # Читаем строки и оставляем только те, где нет '#'
+      clean_lines = [line for line in f_in if '#' not in line and '*' not in line and len(line) > 3]
+
+   with open(file, 'w', encoding='utf-8') as f_out:
+      f_out.writelines(clean_lines)
+
+
 def replace_words_in_files(folder_path, replacements):
     # Проходим по всем файлам в указанной папке
-    for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
-        
-        # Проверяем, что это файл, а не папка
-        if os.path.isfile(file_path):
+   for filename in os.listdir(folder_path):
+      file_path = os.path.join(folder_path, filename)
+      
+      # Проверяем, что это файл, а не папка
+      if os.path.isfile(file_path):
+            
+            remove_lines_with_hash(file_path)
+            
             try:
-                # Читаем содержимое файла
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    content = file.read()
-                
-                # Заменяем слова из словаря
-                new_content = content
-                for old_word, new_word in replacements.items():
-                    new_content = re.sub(old_word, new_word, new_content, flags=re.IGNORECASE)
-                
-                # Если изменения были, перезаписываем файл
-                if new_content != content:
-                    with open(file_path, 'w', encoding='utf-8') as file:
+               # Читаем содержимое файла
+               with open(file_path, 'r', encoding='utf-8') as file:
+                  content = file.read()
+               
+               # Заменяем слова из словаря
+               new_content = content
+               for old_word, new_word in replacements.items():
+                  new_content = re.sub(old_word, new_word, new_content, flags=re.IGNORECASE)
+               
+               # Если изменения были, перезаписываем файл
+               if new_content != content:
+                  with open(file_path, 'w', encoding='utf-8') as file:
                         file.write(new_content)
-                    print(f"Файл '{filename}' успешно обновлен.")
-                else:
-                    print(f"В файле '{filename}' замен не найдено.")
-                    
+                  print(f"Файл '{filename}' успешно обновлен.")
+               else:
+                  print(f"В файле '{filename}' замен не найдено.")
+
+
+
             except Exception as e:
-                print(f"Ошибка при обработке файла {filename}: {e}")
+               print(f"Ошибка при обработке файла {filename}: {e}")
+         
 
 # --- НАСТРОЙКИ ---
-target_folder = './vedmak_characters'  # Путь к твоей папке
+target_folder = './knowledge_base'  # Путь к твоей папке
+
+"""
+Меняем вселенную Ведьмака на вселенную Приключений шурика с примесью дурдома.
+"""
 my_replacements = {
     "Геральт": "Шурик",
     "Весимир": "Фёдор",
@@ -58,8 +77,19 @@ my_replacements = {
     "Ривии": "Москвы",
     "арен": "палат",
     "Островах":"изоляторах",
-    "островитянин": "завсегдатый изолятора"
-
+    "островитянин": "завсегдатый изолятора",
+    "## Дополнительно\n\n\n  *": "Дополнительно: ",
+    "\nбольной 3":"",
+    "__":"",
+    "_":"",
+    "«":"",
+    "»":"",
+    "   ":"",
+    "---":"",
+    "\n":". ",
+    "Женский.":"",
+    "Мужской.":"",
+    "больной 3.":""
 
 
 }
