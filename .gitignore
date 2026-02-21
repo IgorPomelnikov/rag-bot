@@ -4,3 +4,4 @@
 /.pytest_cache
 
 2_knowledge_base/knowledge_base.zip
+.env

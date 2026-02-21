@@ -16,6 +16,7 @@ collection = chroma_client.get_collection(
     embedding_function=emb_fn
 )
 
+
 # 4. Цикл для общения (мини-чат)
 print("База готова. Спрашивай что угодно (или напиши 'exit' для выхода):")
 
