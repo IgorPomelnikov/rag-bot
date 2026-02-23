@@ -78,7 +78,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     documents = results['documents'][0]
     metadatas = results['metadatas'][0]
     pairs = [[user_query, doc] for doc in documents]
-    scores = reranker.predict(pairs)
+    scores = await reranker.predict(pairs)
     reranked_results = sorted(
         zip(documents, scores, metadatas), 
         key=lambda x: x[1], 
