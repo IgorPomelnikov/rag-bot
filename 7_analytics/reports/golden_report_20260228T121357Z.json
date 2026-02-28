@@ -1,0 +1,14 @@
+{
+  "run_log_path": "E:\\Repos\\rag-bot\\7_analytics\\logs\\golden_run_20260228T121357Z.jsonl",
+  "total": 12,
+  "correct": 8,
+  "accuracy": 0.6667,
+  "known_total": 8,
+  "known_correct": 8,
+  "known_recall": 1.0,
+  "missing_total": 4,
+  "missing_correct_rejections": 0,
+  "missing_rejection_rate": 0.0,
+  "no_chunks_count": 0,
+  "run_with_llm": false
+}

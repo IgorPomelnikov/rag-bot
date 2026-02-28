@@ -1,0 +1,86 @@
+[
+  {
+    "id": "Q01",
+    "question": "Кто такой Зузя?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Зузя.md"]
+  },
+  {
+    "id": "Q02",
+    "question": "Что известно о Рори?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Рори.md"]
+  },
+  {
+    "id": "Q03",
+    "question": "Кто такой Тим Уззелл?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Тим Уззелл.md"]
+  },
+  {
+    "id": "Q04",
+    "question": "Кто такой Василек?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Василёк.md"]
+  },
+  {
+    "id": "Q05",
+    "question": "Кто такой Брамбл Фрунтенштрох?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Брамбл Фрунтенштрох.md"]
+  },
+  {
+    "id": "Q06",
+    "question": "Что делает цирюльник в Сворлаге?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Цирюльник (Сворлаг).md"]
+  },
+  {
+    "id": "Q07",
+    "question": "Что известно о купце из Рудника?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Купец (Рудник).md"]
+  },
+  {
+    "id": "Q08",
+    "question": "Что известно о цирюльнике из Золотого города?",
+    "should_answer": true,
+    "topic": "known",
+    "expected_sources": ["Цирюльник (Золотой город).md"]
+  },
+  {
+    "id": "Q09",
+    "question": "Кто такой цирюльник из Оксенфурта?",
+    "should_answer": false,
+    "topic": "missing",
+    "expected_sources": ["Цирюльник (Оксенфурт).md"]
+  },
+  {
+    "id": "Q10",
+    "question": "Кто такой Шеймус Хольт?",
+    "should_answer": false,
+    "topic": "missing",
+    "expected_sources": ["Шеймус Хольт.md"]
+  },
+  {
+    "id": "Q11",
+    "question": "Что известно о купце торговце рыбой?",
+    "should_answer": false,
+    "topic": "missing",
+    "expected_sources": ["Купец (торговец рыбой).md"]
+  },
+  {
+    "id": "Q12",
+    "question": "Кто такой Xarn Velgor?",
+    "should_answer": false,
+    "topic": "missing",
+    "expected_sources": []
+  }
+]

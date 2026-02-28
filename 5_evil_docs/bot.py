@@ -19,6 +19,8 @@ bot.
 import logging
 
 import os
+import json
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
@@ -50,6 +52,35 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
+QUERY_LOG_PATH = os.path.join(os.path.dirname(__file__), "query_logs.jsonl")
+
+
+def is_successful_answer(answer_text: str, chunks_found: bool) -> bool:
+    """Simple heuristic for successful answer quality flag."""
+    if not chunks_found:
+        return False
+    lowered = answer_text.lower()
+    if "не найдено" in lowered or "не знаю" in lowered or "нет данных" in lowered:
+        return False
+    return len(answer_text.strip()) >= 40
+
+
+def log_query_event(
+    query_text: str,
+    chunks_found: bool,
+    answer_text: str,
+    sources: list[str],
+) -> None:
+    event = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "query_text": query_text,
+        "chunks_found": chunks_found,
+        "answer_length": len(answer_text),
+        "successful_answer": is_successful_answer(answer_text, chunks_found),
+        "sources": sources,
+    }
+    with open(QUERY_LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\n")
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -81,7 +112,14 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     raw_metadatas = results['metadatas'][0]
     filtered = [(doc, meta) for doc, meta in zip(raw_documents, raw_metadatas) if doc is not None]
     if not filtered:
-        await update.message.reply_text("Не найдено релевантных документов.")  # pyright: ignore[reportOptionalMemberAccess]
+        answer_text = "Не найдено релевантных документов."
+        log_query_event(
+            query_text=user_query,
+            chunks_found=False,
+            answer_text=answer_text,
+            sources=[],
+        )
+        await update.message.reply_text(answer_text)  # pyright: ignore[reportOptionalMemberAccess]
         return
     documents, metadatas = zip(*filtered)
     pairs = [[user_query, str(doc)] for doc in documents]
@@ -123,9 +161,14 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     ]
 
     if not safe_results:
-        await update.message.reply_text(  # pyright: ignore[reportOptionalMemberAccess]
-            "Все найденные документы были отфильтрованы как потенциально вредоносные."
+        answer_text = "Все найденные документы были отфильтрованы как потенциально вредоносные."
+        log_query_event(
+            query_text=user_query,
+            chunks_found=False,
+            answer_text=answer_text,
+            sources=[],
         )
+        await update.message.reply_text(answer_text)  # pyright: ignore[reportOptionalMemberAccess]
         return
 
     results_encoded = ""
@@ -148,7 +191,20 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         ],
         temperature=0.7,
     )
-    await update.message.reply_text(response.choices[0].message.content)
+    answer_text = response.choices[0].message.content or ""
+    top_sources = []
+    for _, _, meta in safe_results[:5]:
+        src = meta.get("source")
+        if src and src not in top_sources:
+            top_sources.append(src)
+
+    log_query_event(
+        query_text=user_query,
+        chunks_found=bool(safe_results),
+        answer_text=answer_text,
+        sources=top_sources,
+    )
+    await update.message.reply_text(answer_text)
 
 
 def main() -> None:
