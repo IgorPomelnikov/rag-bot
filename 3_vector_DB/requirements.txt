@@ -1,0 +1,4 @@
+chonkie
+chonkie[all]
+chromadb
+
